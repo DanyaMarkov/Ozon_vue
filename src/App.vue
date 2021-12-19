@@ -8,7 +8,18 @@
         <div class="row">
 
           <app-filter></app-filter>
-          <app-good></app-good>
+
+          <!-- Goods -->
+          <div class="col-12 col-lg-9 col-xl-10">
+            <div class="container">
+              <div class="row no-gutters goods">
+
+                <app-good :goods="goods"></app-good>
+
+              </div>
+            </div>
+          </div>
+          <!-- Goods -->
 
         </div>
       </div>
@@ -25,6 +36,19 @@ export default {
   name: 'App',
   data () {
     return {
+      goods: []
+    }
+  },
+  mounted () {
+    this.getGoods()
+  },
+  methods: {
+    getGoods () {
+      fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+        .then(response => response.json())
+        .then(data => {
+          this.goods = data
+        })
     }
   },
   components: { AppHeader, AppGood, AppFilter }
