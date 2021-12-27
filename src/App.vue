@@ -1,6 +1,7 @@
 <template>
 
     <app-header
+      v-on:search-goods="searchGoods"
     ></app-header>
 
     <main>
@@ -48,12 +49,22 @@ export default {
       const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
       const data = await response.json()
       this.goods = data
+    },
+
+    searchGoods (data) {
+      this.goods = data
     }
+
     // getCategories() {
     //   this.categories = this.goods.filter(good => good.category === "Игры и софт");
     //   console.log(this.categories)
     // }
 
+  },
+  provide () {
+    return {
+      goods: this.goods
+    }
   },
   components: { AppHeader, AppGood, AppFilter }
 }
