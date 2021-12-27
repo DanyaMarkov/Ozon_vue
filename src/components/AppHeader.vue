@@ -74,10 +74,6 @@ export default {
       } else {
         this.isShowCart = 'none'
       }
-
-      // console.log(this.isShowCart);
-
-      // this.$refs.cartClick.style.width = "10px";
     },
     closeCart (value) {
       this.isShowCart = value

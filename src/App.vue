@@ -37,19 +37,23 @@ export default {
   data () {
     return {
       goods: []
+      // categories: [],
     }
   },
   mounted () {
     this.getGoods()
   },
   methods: {
-    getGoods () {
-      fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-        .then(response => response.json())
-        .then(data => {
-          this.goods = data
-        })
+    async getGoods () {
+      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+      const data = await response.json()
+      this.goods = data
     }
+    // getCategories() {
+    //   this.categories = this.goods.filter(good => good.category === "Игры и софт");
+    //   console.log(this.categories)
+    // }
+
   },
   components: { AppHeader, AppGood, AppFilter }
 }
