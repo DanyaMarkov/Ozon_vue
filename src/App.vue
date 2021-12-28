@@ -1,7 +1,10 @@
 <template>
 
     <app-header
+      :categories="categories"
+
       v-on:search-goods="searchGoods"
+      v-on:category-goods="categoryGoods"
     ></app-header>
 
     <main>
@@ -15,7 +18,8 @@
             <div class="container">
               <div class="row no-gutters goods">
 
-                <app-good :goods="goods"></app-good>
+                <h2 v-if="goods.length == 0" class="goods-notion">По такому зарпосу товары не найдены</h2>
+                <app-good v-else :goods="goods"></app-good>
 
               </div>
             </div>
@@ -37,8 +41,8 @@ export default {
   name: 'App',
   data () {
     return {
-      goods: []
-      // categories: [],
+      goods: [],
+      categories: []
     }
   },
   mounted () {
@@ -49,27 +53,36 @@ export default {
       const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
       const data = await response.json()
       this.goods = data
+      this.getCategories()
     },
 
     searchGoods (data) {
       this.goods = data
+    },
+
+    categoryGoods (data) {
+      this.goods = data
+    },
+
+    getCategories () {
+      const obj = {}
+      let newArr = []
+      this.goods.forEach(function (v) {
+        obj[v.category] = v
+      })
+      newArr = Object.keys(obj).map(function (id) {
+        return obj[id]
+      })
+      this.categories = newArr
     }
 
-    // getCategories() {
-    //   this.categories = this.goods.filter(good => good.category === "Игры и софт");
-    //   console.log(this.categories)
-    // }
-
-  },
-  provide () {
-    return {
-      goods: this.goods
-    }
   },
   components: { AppHeader, AppGood, AppFilter }
 }
 </script>
 
 <style lang="scss">
-
+  .goods-notion {
+    margin: 50px auto;
+  }
 </style>

@@ -12,6 +12,8 @@
               <app-catalog
                 v-bind:is-show-catalog="isShowCatalog"
                 v-on:click="catalogClick"
+                :categories="categories"
+                v-on:category-goods="categoryGoods"
               >
 
               </app-catalog>
@@ -59,6 +61,8 @@ import AppCatalog from './AppCatalog.vue'
 import AppSearch from './AppSearch.vue'
 
 export default {
+  props: ['categories'],
+  emits: ['search-goods', 'category-goods'],
   data () {
     return {
       isShowCart: 'none',
@@ -87,6 +91,9 @@ export default {
 
     searchGoods (data) {
       this.$emit('search-goods', data)
+    },
+    categoryGoods (data) {
+      this.$emit('category-goods', data)
     }
 
   },

@@ -2,7 +2,6 @@
     <div class="search">
       <div class="search-wrapper">
         <input class="search-wrapper_input" type="text" v-model="inputValue" :placeholder="placeholderString" @input="getSearchGoods"  />
-        {{inputValue}}
       </div>
       <div class="search-btn">
         <button></button>
@@ -12,6 +11,7 @@
 
 <script>
 export default {
+  emits: ['search-goods'],
   data () {
     return {
       inputValue: '',
