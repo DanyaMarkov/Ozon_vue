@@ -23,7 +23,7 @@ export default {
       const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
       const data = await response.json()
       const filterData = data.filter((good) => {
-        return good.title.includes(this.inputValue)
+        return good.title.toLowerCase().includes(this.inputValue.toLowerCase())
       })
       this.$emit('search-goods', filterData)
     }

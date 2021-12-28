@@ -11,7 +11,10 @@
       <div class="container">
         <div class="row">
 
-          <app-filter></app-filter>
+          <app-filter
+            v-on:filter-goods="filterGoods"
+            v-on:discount-goods="discountGoods"
+          ></app-filter>
 
           <!-- Goods -->
           <div class="col-12 col-lg-9 col-xl-10">
@@ -74,6 +77,14 @@ export default {
         return obj[id]
       })
       this.categories = newArr
+    },
+
+    filterGoods (data) {
+      this.goods = data
+    },
+
+    discountGoods (data) {
+      this.goods = data
     }
 
   },
