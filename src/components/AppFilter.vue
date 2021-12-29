@@ -82,10 +82,14 @@ export default {
     },
 
     hotSaleFilter (data) {
-      const filterData = data.filter((good) => {
-        return good.sale === this.discount
-      })
-      return filterData
+      if (this.discount === true) {
+        const filterData = data.filter((good) => {
+          return good.sale === this.discount
+        })
+        return filterData
+      } else {
+        return data
+      }
     }
   }
 
