@@ -12,20 +12,19 @@
               <app-catalog
                 v-bind:is-show-catalog="isShowCatalog"
                 v-on:click="catalogClick"
+                :categories="categories"
+                v-on:category-goods="categoryGoods"
               >
 
               </app-catalog>
               <!-- catalog button -->
 
               <!-- search block -->
-              <div class="search">
-                <div class="search-wrapper">
-                <input class="search-wrapper_input" type="text" />
-                </div>
-                <div class="search-btn">
-                <button></button>
-                </div>
-              </div>
+              <app-search
+
+                v-on:search-goods="searchGoods"
+
+              ></app-search>
               <!-- search block -->
 
             </div>
@@ -59,8 +58,11 @@
 <script>
 import AppCart from './AppCart.vue'
 import AppCatalog from './AppCatalog.vue'
+import AppSearch from './AppSearch.vue'
 
 export default {
+  props: ['categories'],
+  emits: ['search-goods', 'category-goods'],
   data () {
     return {
       isShowCart: 'none',
@@ -74,10 +76,6 @@ export default {
       } else {
         this.isShowCart = 'none'
       }
-
-      // console.log(this.isShowCart);
-
-      // this.$refs.cartClick.style.width = "10px";
     },
     closeCart (value) {
       this.isShowCart = value
@@ -89,11 +87,18 @@ export default {
       } else {
         this.isShowCatalog = 'none'
       }
+    },
+
+    searchGoods (data) {
+      this.$emit('search-goods', data)
+    },
+    categoryGoods (data) {
+      this.$emit('category-goods', data)
     }
 
   },
 
-  components: { AppCart, AppCatalog }
+  components: { AppCart, AppCatalog, AppSearch }
 
 }
 </script>
