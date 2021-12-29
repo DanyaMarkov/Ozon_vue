@@ -13,7 +13,6 @@
 
           <app-filter
             v-on:filter-goods="filterGoods"
-            v-on:discount-goods="discountGoods"
           ></app-filter>
 
           <!-- Goods -->

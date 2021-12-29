@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  emits: ['filter-goods', 'discount-goods'],
+  emits: ['filter-goods'],
   data () {
     return {
       maxPrice: '',
@@ -48,37 +48,45 @@ export default {
   methods: {
     async getFilterGoods () {
       const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
+      let data = await response.json()
+      data = this.hotSaleFilter(data)
+      console.log('До фильтрации по ценам', data)
 
       if (this.minPrice === '' && this.maxPrice === '') {
         const filterData = data
         this.$emit('filter-goods', filterData)
+        console.log('После выборки по ценам', filterData)
       } else if (this.minPrice !== '' && this.maxPrice !== '') {
         const filterData = data.filter((good) => {
           return good.price > +this.minPrice && good.price < +this.maxPrice
         })
         this.$emit('filter-goods', filterData)
+        console.log('После выборки по ценам', filterData)
       } else if (this.minPrice !== '' && this.maxPrice === '') {
         const filterData = data.filter((good) => {
           return good.price > +this.minPrice
         })
         this.$emit('filter-goods', filterData)
+        console.log('После выборки по ценам', filterData)
       } else if (this.minPrice === '' && this.maxPrice !== '') {
         const filterData = data.filter((good) => {
           return good.price < +this.maxPrice
         })
         this.$emit('filter-goods', filterData)
+        console.log('После выборки по ценам', filterData)
       }
     },
 
-    async discountChange () {
+    discountChange () {
       this.discount = !this.discount
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
+      this.getFilterGoods()
+    },
+
+    hotSaleFilter (data) {
       const filterData = data.filter((good) => {
         return good.sale === this.discount
       })
-      this.$emit('discount-goods', filterData)
+      return filterData
     }
   }
 
