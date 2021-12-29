@@ -47,33 +47,32 @@ export default {
 
   methods: {
     async getFilterGoods () {
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      let data = await response.json()
-      data = this.hotSaleFilter(data)
-      console.log('До фильтрации по ценам', data)
+      try {
+        const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+        let data = await response.json()
+        data = this.hotSaleFilter(data)
 
-      if (this.minPrice === '' && this.maxPrice === '') {
-        const filterData = data
-        this.$emit('filter-goods', filterData)
-        console.log('После выборки по ценам', filterData)
-      } else if (this.minPrice !== '' && this.maxPrice !== '') {
-        const filterData = data.filter((good) => {
-          return good.price > +this.minPrice && good.price < +this.maxPrice
-        })
-        this.$emit('filter-goods', filterData)
-        console.log('После выборки по ценам', filterData)
-      } else if (this.minPrice !== '' && this.maxPrice === '') {
-        const filterData = data.filter((good) => {
-          return good.price > +this.minPrice
-        })
-        this.$emit('filter-goods', filterData)
-        console.log('После выборки по ценам', filterData)
-      } else if (this.minPrice === '' && this.maxPrice !== '') {
-        const filterData = data.filter((good) => {
-          return good.price < +this.maxPrice
-        })
-        this.$emit('filter-goods', filterData)
-        console.log('После выборки по ценам', filterData)
+        if (this.minPrice === '' && this.maxPrice === '') {
+          const filterData = data
+          this.$emit('filter-goods', filterData)
+        } else if (this.minPrice !== '' && this.maxPrice !== '') {
+          const filterData = data.filter((good) => {
+            return good.price > +this.minPrice && good.price < +this.maxPrice
+          })
+          this.$emit('filter-goods', filterData)
+        } else if (this.minPrice !== '' && this.maxPrice === '') {
+          const filterData = data.filter((good) => {
+            return good.price > +this.minPrice
+          })
+          this.$emit('filter-goods', filterData)
+        } else if (this.minPrice === '' && this.maxPrice !== '') {
+          const filterData = data.filter((good) => {
+            return good.price < +this.maxPrice
+          })
+          this.$emit('filter-goods', filterData)
+        }
+      } catch (e) {
+        console.log(e.message)
       }
     },
 

@@ -28,12 +28,16 @@ export default {
   },
   methods: {
     async getCategoryGoods (type) {
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
-      const filterData = data.filter((good) => {
-        return good.category === type
-      })
-      this.$emit('category-goods', filterData)
+      try {
+        const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+        const data = await response.json()
+        const filterData = data.filter((good) => {
+          return good.category === type
+        })
+        this.$emit('category-goods', filterData)
+      } catch (e) {
+        console.log(e.message)
+      }
     }
   }
 }

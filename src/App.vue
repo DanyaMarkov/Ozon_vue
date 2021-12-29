@@ -52,10 +52,14 @@ export default {
   },
   methods: {
     async getGoods () {
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
-      this.goods = data
-      this.getCategories()
+      try {
+        const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+        const data = await response.json()
+        this.goods = data
+        this.getCategories()
+      } catch (e) {
+        console.log(e.message)
+      }
     },
 
     searchGoods (data) {
