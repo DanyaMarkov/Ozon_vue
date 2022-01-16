@@ -36,7 +36,7 @@
 
 <script>
 export default {
-  emits: ['filter-goods', 'discount-goods'],
+  emits: ['filter-goods'],
   data () {
     return {
       maxPrice: '',
@@ -47,38 +47,49 @@ export default {
 
   methods: {
     async getFilterGoods () {
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
+      try {
+        const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+        let data = await response.json()
+        data = this.hotSaleFilter(data)
 
-      if (this.minPrice === '' && this.maxPrice === '') {
-        const filterData = data
-        this.$emit('filter-goods', filterData)
-      } else if (this.minPrice !== '' && this.maxPrice !== '') {
-        const filterData = data.filter((good) => {
-          return good.price > +this.minPrice && good.price < +this.maxPrice
-        })
-        this.$emit('filter-goods', filterData)
-      } else if (this.minPrice !== '' && this.maxPrice === '') {
-        const filterData = data.filter((good) => {
-          return good.price > +this.minPrice
-        })
-        this.$emit('filter-goods', filterData)
-      } else if (this.minPrice === '' && this.maxPrice !== '') {
-        const filterData = data.filter((good) => {
-          return good.price < +this.maxPrice
-        })
-        this.$emit('filter-goods', filterData)
+        if (this.minPrice === '' && this.maxPrice === '') {
+          const filterData = data
+          this.$emit('filter-goods', filterData)
+        } else if (this.minPrice !== '' && this.maxPrice !== '') {
+          const filterData = data.filter((good) => {
+            return good.price > +this.minPrice && good.price < +this.maxPrice
+          })
+          this.$emit('filter-goods', filterData)
+        } else if (this.minPrice !== '' && this.maxPrice === '') {
+          const filterData = data.filter((good) => {
+            return good.price > +this.minPrice
+          })
+          this.$emit('filter-goods', filterData)
+        } else if (this.minPrice === '' && this.maxPrice !== '') {
+          const filterData = data.filter((good) => {
+            return good.price < +this.maxPrice
+          })
+          this.$emit('filter-goods', filterData)
+        }
+      } catch (e) {
+        console.log(e.message)
       }
     },
 
-    async discountChange () {
+    discountChange () {
       this.discount = !this.discount
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
-      const filterData = data.filter((good) => {
-        return good.sale === this.discount
-      })
-      this.$emit('discount-goods', filterData)
+      this.getFilterGoods()
+    },
+
+    hotSaleFilter (data) {
+      if (this.discount === true) {
+        const filterData = data.filter((good) => {
+          return good.sale === this.discount
+        })
+        return filterData
+      } else {
+        return data
+      }
     }
   }
 

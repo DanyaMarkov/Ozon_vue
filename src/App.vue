@@ -13,15 +13,20 @@
 
           <app-filter
             v-on:filter-goods="filterGoods"
-            v-on:discount-goods="discountGoods"
           ></app-filter>
 
           <!-- Goods -->
           <div class="col-12 col-lg-9 col-xl-10">
             <div class="container">
-              <div class="row no-gutters goods">
 
-                <h2 v-if="goods.length == 0" class="goods-notion">По такому зарпосу товары не найдены</h2>
+              <app-loader
+                v-if="loading"
+              >
+              </app-loader>
+
+              <div class="row no-gutters goods" v-else>
+
+                <h2 v-if="loading !== true && goods.length == 0" class="goods-notion">По такому зарпосу товары не найдены</h2>
                 <app-good v-else :goods="goods"></app-good>
 
               </div>
@@ -39,13 +44,15 @@
 import AppHeader from './components/AppHeader.vue'
 import AppGood from './components/AppGood.vue'
 import AppFilter from './components/AppFilter.vue'
+import AppLoader from './components/AppLoader.vue'
 
 export default {
   name: 'App',
   data () {
     return {
       goods: [],
-      categories: []
+      categories: [],
+      loading: false
     }
   },
   mounted () {
@@ -53,10 +60,18 @@ export default {
   },
   methods: {
     async getGoods () {
-      const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
-      const data = await response.json()
-      this.goods = data
-      this.getCategories()
+      try {
+        this.loading = true
+        const response = await fetch('https://ozon-v-default-rtdb.firebaseio.com/goods.json')
+        const data = await response.json()
+        setTimeout(() => {
+          this.goods = data
+          this.loading = false
+          this.getCategories()
+        }, 1000)
+      } catch (e) {
+        console.log(e.message)
+      }
     },
 
     searchGoods (data) {
@@ -64,7 +79,11 @@ export default {
     },
 
     categoryGoods (data) {
-      this.goods = data
+      this.loading = true
+      setTimeout(() => {
+        this.goods = data
+        this.loading = false
+      }, 1000)
     },
 
     getCategories () {
@@ -88,7 +107,7 @@ export default {
     }
 
   },
-  components: { AppHeader, AppGood, AppFilter }
+  components: { AppHeader, AppGood, AppFilter, AppLoader }
 }
 </script>
 
