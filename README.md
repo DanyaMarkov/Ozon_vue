@@ -11,7 +11,7 @@
 ### Technologies
 * Vue3
 * Working with JSON by Firebase
-* Bootstrap4
+* Bootstrap
 
 
 ## Project setup
